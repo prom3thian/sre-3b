@@ -44,15 +44,15 @@
  **************************************************************************/
 
 /**
- * \name Pull up / down settings
- * \anchor dio_pupd_settings
+ * \name Speed / Position settings
+ * \anchor sas_settings
  *
- * Selects a pull-up or pull-down configuration for a digital input
+ * Selects a position or speed configuration for steering angle sensor
  */
 /*@{*/
 #define SUP_V_9            		SUP_V_9    /**< minimum voltage 9VDC  */
 #define SUP_V_32            	SUP_V_32    /**< minimum voltage 9VDC  */
-#define MIR_0            		MIR_0    /**< mechanical input range 0 degrees  */
+#define MIR_0            		  MIR_0    /**< mechanical input range 0 degrees  */
 #define MIR_360            		MIR_360    /**< mechanical input range 360 degrees  */
 #define BAUD_OUT            	BAUD_OUT    /**< baud rate 125, 250, or 500 kb/s  */
 
