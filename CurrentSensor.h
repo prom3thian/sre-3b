@@ -1,8 +1,8 @@
 /**********************************************************************//**
- * \authors         Francisco Ibarra and Gabriel Asuncion
+ * \authors      Francisco Ibarra and Gabriel Asuncion
  * \reference    http://www.lem.com/docs/products/hal_50_600-s.pdf
  				 https://www.digikey.com/en/articles/techzone/2012/sep/the-basics-of-current-sensors
- * \date         11-9-17
+ * \date         11-28-17
  **************************************************************************/
 /**********************************************************************//**
  * \file CurrentSensors.h
@@ -37,6 +37,7 @@
 
 #include "IO_Driver.h"    /**< Initializing drivers for laptop to VCU communication */
 #include "IO_CAN.h"     /**< Output is CAN signal */
+#include "IO_ADC.h"     /**< Needed for analog sensor data to be converted to digital */
 #include "tempsensor.h" /**< Needed for current sensor temperature range */
 #include "safety.h" /**< Links to error messages that will be displayed if something goes wrong */
 #include "sensor.h"  /**< Allows access for communication to other sensors */
@@ -63,49 +64,42 @@
 
 /*@}*/
 
+typedef struct _CurrentSensor
+{
+//These variables will initialize the sensor
+	ubyte CS_VMax;
+	ubyte CS_VMin;
+	ubyte CS_ACDC_Range;
+	ubyte CS_TempMax;
+	ubyte CS_TempMin;
+
+} CurrentSensor;
+
 /**************************************************************************
  *
  * F U N C T I O N S
  *
  **************************************************************************/
-/**********************************************************************//**
- *
- * \brief begin reading steering angle
- *
- * \param di_channel                Analog input:
- *                                      - 
- * \param mode                      Input configuration:
- *                                      - 
- *
- * \return ubyte4:
- * \return val    
- *
- ***************************************************************************/
-ubyte4 myCurrentSensor(...);
 
-typedef struct CURRENTSENSOR CRS;
-{
+//This will be used to initialize the sensor
+CurrentSensor* CurrentSensor_new(void);
 
-	float voltage;
-	float currentValue;
-	float resistance;
-	bool emergency = false; //Returns signals to other sensors to potentially turn off the car
-	bool SRC_HIGH = false; //true when there is a short circuit between VCU and any supply voltage
-	bool SRC_LOW = false; //true when there is a short circuit between VCU and ground
-	float *currentValue;
-
-		
-};
+/**
+*Will be able to return sensor data
+*@param sensorData
+*/
+ubyte getCurrentValue(ubyte sensorData);
 
 
-void SRC_HIGH(*currentValue);
-void SRC_LOW(*currentValue);
-bool safe_State(bool SRC_LOW, bool SRC_HIGH);
+/** sensorData function will perform the calculations necessary to recieve readable current data
+* @param ADC_data will incorporate the IO_ADC include file to perform calculations in order to
+* turn raw data into digital data
+*/
+void sensorData(ubyte ADC_data); //ADC will be the parameter that will be used
 
 
+bool flag_safeState(ubyte senorData);
 
+// ** 4amps is the charge overcurrent **
 
 #endif _CURRENTSENSOR_H
-
-//hyttc which one?
-//Api is online?
