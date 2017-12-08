@@ -168,8 +168,11 @@ extern Sensor Sensor_WPS_FR;  // = { 3 };
 extern Sensor Sensor_WPS_RL;  // = { 3 };
 extern Sensor Sensor_WPS_RR;  // = { 3 };
 
-//Steering position Sensor (SPS) - continuous rotation sensor, works like TPS, probably ratiometric
+//Steering Angle Sensor (SAS) - continuous rotation sensor, works like TPS, probably ratiometric
 extern Sensor Sensor_SAS;  // = { 4 };
+
+//Shock Position Sensor (SPS) - linear potentiometer
+extern Sensor Sensor_SPS;
 
 //Switches
 //precharge failure

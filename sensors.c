@@ -34,6 +34,7 @@ extern Sensor Sensor_WPS_FR;
 extern Sensor Sensor_WPS_RL;
 extern Sensor Sensor_WPS_RR;
 extern Sensor Sensor_SAS;
+extern Sensor Sensor_SPS;
 extern Sensor Sensor_LVBattery;
 
 extern Sensor Sensor_BenchTPS0;
@@ -91,6 +92,9 @@ void sensors_updateSensors(void)
 	Sensor_WSS_FR.ioErr_signalGet = IO_PWD_FreqGet(IO_PWD_08, &Sensor_WSS_FR.sensorValue);
 	Sensor_WSS_RL.ioErr_signalGet = IO_PWD_FreqGet(IO_PWD_11, &Sensor_WSS_RL.sensorValue);
 	Sensor_WSS_RR.ioErr_signalGet = IO_PWD_FreqGet(IO_PWD_09, &Sensor_WSS_RR.sensorValue);
+
+    //Steering Angle Sensor ---------------------------------------------------
+    Sensor_SAS.ioErr_signalGet = IO_PWD_FreqGet(/*Find it*/, &Sensor_SAS.sensorValue);
 
     //Switches / Digital ---------------------------------------------------
 	Sensor_RTDButton.ioErr_signalGet = IO_DI_Get(IO_DI_00, &Sensor_RTDButton.sensorValue);
