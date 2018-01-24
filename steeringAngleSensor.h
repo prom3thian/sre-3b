@@ -108,7 +108,7 @@ typedef enum{
 
 typedef struct _SteeringAngleSensor {
     //Sensor values / properties
-    Sensors* sensor;
+    Sensor* sas;
 
     ubyte2 sas_calibMin;  //2 bytes for ADC, 4 bytes if switch to digital/timer/PWM
 	ubyte2 sas_calibMax;

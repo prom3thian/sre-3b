@@ -56,7 +56,7 @@ typedef enum
 {
 	DrivingOffWhilePluggedIn = 0x01,	// Driving off while plugged in
 	InterlockTripped = 0x02,			// Inter-lock is tripped
-	CommuncationFault = 0x04,			// Communication fault with a bank or cell
+	CommunicationFault = 0x04,			// Communication fault with a bank or cell
 	ChargeOverCurrent = 0x08,			// Charge over-current
 	DischargeOverCurrent = 0x10,        // Discharge over-current
 	OverTemperture = 0x20,				// Over-temperature fault
