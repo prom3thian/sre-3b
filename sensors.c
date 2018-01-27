@@ -21,6 +21,7 @@
 #include "sensors.h"
 #include "mathFunctions.h"
 
+extern Sensor Sensor_SPS0;
 extern Sensor Sensor_TPS0;
 extern Sensor Sensor_TPS1;
 extern Sensor Sensor_BPS0;
@@ -57,6 +58,8 @@ extern Sensor Sensor_HVILTerminationSense;
 //----------------------------------------------------------------------------
 void sensors_updateSensors(void)
 {
+    Sensor_SPS0.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_02, &Sensor_SPS.sensorValue, &Sensor_SPS.fresh);
+
     //TODO: Handle errors (using the return values for these Get functions)
 
     //TODO: RTDS
@@ -69,13 +72,12 @@ void sensors_updateSensors(void)
     //Sensor_TPS0.ioErr_signalGet = IO_PWD_PulseGet(IO_PWM_00, &Sensor_TPS0.sensorValue);
 	//Sensor_TPS1.ioErr_signalGet = IO_PWD_PulseGet(IO_PWM_01, &Sensor_TPS1.sensorValue);
 
-	
+
 	//Brake Position Sensor ---------------------------------------------------
 	Sensor_BPS0.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_02, &Sensor_BPS0.sensorValue, &Sensor_BPS0.fresh);
-
 	//TCS Knob
 	Sensor_TCSKnob.ioErr_signalGet = IO_ADC_Get(IO_ADC_5V_04, &Sensor_TCSKnob.sensorValue, &Sensor_TCSKnob.fresh);
-    
+
 	//?? - For future use ---------------------------------------------------
     //IO_ADC_Get(IO_ADC_5V_03, &Sensor_BPS1.sensorValue, &Sensor_BPS1.fresh);
 
@@ -85,6 +87,7 @@ void sensors_updateSensors(void)
     IO_ADC_Get(IO_ADC_5V_06, &Sensor_WPS_RL.sensorValue, &Sensor_WPS_RL.fresh);
     IO_ADC_Get(IO_ADC_5V_07, &Sensor_WPS_RR.sensorValue, &Sensor_WPS_RR.fresh);
 	*/
+
 
     //Wheel speed sensors ---------------------------------------------------
 	Sensor_WSS_FL.ioErr_signalGet = IO_PWD_FreqGet(IO_PWD_10, &Sensor_WSS_FL.sensorValue);
@@ -102,7 +105,6 @@ void sensors_updateSensors(void)
     //Other stuff ---------------------------------------------------
     //Battery voltage (at VCU internal electronics supply input)
 	Sensor_LVBattery.ioErr_signalGet = IO_ADC_Get(IO_ADC_UBAT, &Sensor_LVBattery.sensorValue, &Sensor_LVBattery.fresh);
-
 
 }
 

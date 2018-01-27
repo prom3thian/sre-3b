@@ -100,8 +100,8 @@
 
 
 
-typedef enum 
-{ 
+typedef enum
+{
       Light_dashEco        //on/off
     , Light_dashError      //on/off
     , Light_dashRTD        //on/off
@@ -127,7 +127,7 @@ typedef struct _Sensor {
     //Sensor values / properties
     ubyte4 specMin;
     ubyte4 specMax;
-    
+
     //ubyte2 calibMin;
     //ubyte2 calibMax;
     //ubyte2 calibNormal;  //zero value or normal position
@@ -147,6 +147,7 @@ typedef struct _Sensor {
 //----------------------------------------------------------------------------
 //Initialize all sensors in vcu.c
 //TODO: Read stored calibration data from EEPROM
+extern Sensor Sensor_SPS0;
 
 //Torque Encoders (TPS is not really accurate since there's no throttle to position in an EV)
 extern Sensor Sensor_TPS0;  // = { 0, 0.5, 4.5 };
@@ -182,7 +183,6 @@ extern Sensor Sensor_TCSKnob;
 extern Sensor Sensor_TEMP_BrakingSwitch;
 
 extern Sensor Sensor_HVILTerminationSense;
-
 
 //Other
 extern Sensor Sensor_LVBattery; // = { 0xA };  //Note: There will be no init for this "sensor"
