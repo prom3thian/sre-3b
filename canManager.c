@@ -1,7 +1,7 @@
 
 #include <stdlib.h> //malloc
 
-#include "IO_Driver.h" 
+#include "IO_Driver.h"
 #include "IO_CAN.h"
 #include "IO_RTC.h"
 
@@ -24,10 +24,10 @@ struct _CanManager {
     SerialManager* sm;
 
     ubyte1 canMessageLimit;
-	
+
     //These are our four FIFO queues.  All messages should come/go through one of these queues.
     //Functions shall have a CanChannel enum (see header) parameter.  Direction (send/receive is not
-    //specified by this parameter.  The CAN0/CAN1 is selected based on the parameter passed in, and 
+    //specified by this parameter.  The CAN0/CAN1 is selected based on the parameter passed in, and
     //Read/Write is selected based on the function that is being called (get/send)
     ubyte1 can0_busSpeed;
     ubyte1 can0_readHandle;
@@ -40,7 +40,7 @@ struct _CanManager {
     ubyte1 can1_read_messageLimit;
     ubyte1 can1_writeHandle;
     ubyte1 can1_write_messageLimit;
-    
+
     IO_ErrorType ioErr_can0_Init;
     IO_ErrorType ioErr_can1_Init;
 
@@ -85,7 +85,7 @@ CanManager* CanManager_new(ubyte2 can0_busSpeed, ubyte1 can0_read_messageLimit, 
 
     me->sm = serialMan;
     SerialManager_send(me->sm, "CanManager's reference to SerialManager was created.\n");
-	
+
     //create can history data structure (AVL tree?)
 	//me->incomingTree = NULL;
     //me->outgoingTree = NULL;
@@ -123,7 +123,7 @@ CanManager* CanManager_new(ubyte2 can0_busSpeed, ubyte1 can0_read_messageLimit, 
     //-------------------------------------------------------------------
     //AVLNode* insertedMessage;
     //insertedMessage = AVL_insert(me->canMessageHistory, 0x0C0, 0, 50000, 125000, TRUE); //MCM command message
-    
+
     ubyte2 messageID;
     //Outgoing ----------------------------
     messageID = 0xC0;  //MCM Command Message
@@ -250,7 +250,7 @@ IO_ErrorType CanManager_send(CanManager* me, CanChannel channel, IO_CAN_DATA_FRA
         //----------------------------------------------------------------------------
         minTimeExceeded = ((IO_RTC_GetTimeUS(lastMessage->lastMessage_timeStamp) >= lastMessage->timeBetweenMessages_Min));
         maxTimeExceeded = ((IO_RTC_GetTimeUS(lastMessage->lastMessage_timeStamp) >= 50000));//lastMessage->timeBetweenMessages_Max));
-        
+
         //----------------------------------------------------------------------------
         // If any criteria were exceeded, send the message out
         //----------------------------------------------------------------------------
@@ -327,7 +327,7 @@ void CanManager_read(CanManager* me, CanChannel channel, MotorController* mcm, B
     IO_CAN_DATA_FRAME canMessages[(channel == CAN0_HIPRI ? me->can0_read_messageLimit : me->can1_read_messageLimit)];
     ubyte1 canMessageCount;  //FIFO queue only holds 128 messages max
 
-	//Read messages from hipri channel 
+	//Read messages from hipri channel
 	*(channel == CAN0_HIPRI ? &me->ioErr_can0_read : &me->ioErr_can1_read) =
     IO_CAN_ReadFIFO((channel == CAN0_HIPRI ? me->can0_readHandle : me->can1_writeHandle)
                     , canMessages
@@ -376,7 +376,7 @@ void CanManager_read(CanManager* me, CanChannel channel, MotorController* mcm, B
         case 0x629:
             BMS_parseCanMessage(bms, &canMessages[currMessage]);
 			break;
-			
+
 		//-------------------------------------------------------------------------
 		//VCU Debug Control
 		//-------------------------------------------------------------------------
@@ -420,7 +420,7 @@ void canOutput_sendSensorMessages(CanManager* me)
 
 
 //----------------------------------------------------------------------------
-// 
+//
 //----------------------------------------------------------------------------
 void canOutput_sendDebugMessage(CanManager* me, TorqueEncoder* tps, BrakePressureSensor* bps, MotorController* mcm, WheelSpeeds* wss, SafetyChecker* sc)
 {
@@ -550,6 +550,21 @@ void canOutput_sendDebugMessage(CanManager* me, TorqueEncoder* tps, BrakePressur
     canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getNotices(sc) >> 8;
     canMessages[canMessageCount - 1].length = byteNum;
 
+    //xiao 4-20 for 50A
+    canMessageCount+=4;
+    byteNum = 0;
+    canMessages[canMessageCount - 1].id_format = IO_CAN_STD_FRAME;
+    canMessages[canMessageCount - 1].id = canMessageID + canMessageCount - 1;
+    canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getFaults(sc);
+    canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getFaults(sc) >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getFaults(sc) >> 16;
+    canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getFaults(sc) >> 24;
+    canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getWarnings(sc);
+    canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getWarnings(sc) >> 8;
+    canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getNotices(sc);
+    canMessages[canMessageCount - 1].data[byteNum++] = SafetyChecker_getNotices(sc) >> 8;
+    canMessages[canMessageCount - 1].length = byteNum;
+
 	//12v battery
 	float4 LVBatterySOC = 0;
 	if (Sensor_LVBattery.sensorValue < 12730)
@@ -638,6 +653,6 @@ void canOutput_sendDebugMessage(CanManager* me, TorqueEncoder* tps, BrakePressur
     //Place the can messsages into the FIFO queue ---------------------------------------------------
     //IO_CAN_WriteFIFO(canFifoHandle_HiPri_Write, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
     CanManager_send(me, CAN0_HIPRI, canMessages, canMessageCount);  //Important: Only transmit one message (the MCU message)
-    //IO_CAN_WriteFIFO(canFifoHandle_LoPri_Write, canMessages, canMessageCount);  
+    //IO_CAN_WriteFIFO(canFifoHandle_LoPri_Write, canMessages, canMessageCount);
 
 }
