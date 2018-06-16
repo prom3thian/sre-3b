@@ -30,8 +30,8 @@
 #include "IO_Driver.h"  //Includes datatypes, constants, etc - should be included in every c file
 #include "IO_RTC.h"
 #include "IO_UART.h"
-//#include "IO_CAN.h"
-//#include "IO_PWM.h"
+#include "IO_PWM.h"
+#include "IO_CAN.h"
 
 //Our code
 #include "initializations.h"
@@ -128,7 +128,6 @@ void main(void)
     /*******************************************/
     /*      System Level Initializations       */
     /*******************************************/
-
 
     //----------------------------------------------------------------------------
     // Check if we're on the bench or not
@@ -283,7 +282,7 @@ void main(void)
         BrakePressureSensor_calibrationCycle(bps, &calibrationErrors);
         
         //Brake Light
-        if (bps->brakePercentage > 10)
+        if (bps->brakePercentage >= 5)
         {   
             IO_DO_Set(IO_DO_08, TRUE); //Turn on if brake is pressed
         }

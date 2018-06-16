@@ -20,7 +20,6 @@ struct _CanManager {
     //AVLNode* incomingTree;
     //AVLNode* outgoingTree;
 
-
     SerialManager* sm;
 
     ubyte1 canMessageLimit;
@@ -424,7 +423,7 @@ void canOutput_sendSensorMessages(CanManager* me)
 // 
 //----------------------------------------------------------------------------
 void canOutput_sendDebugMessage(CanManager* me, TorqueEncoder* tps, BrakePressureSensor* bps, MotorController* mcm, WheelSpeeds* wss, SafetyChecker* sc)
-{
+{   
     IO_CAN_DATA_FRAME canMessages[me->can0_write_messageLimit];
     ubyte1 errorCount;
     float4 tempPedalPercent;   //Pedal percent float (a decimal between 0 and 1)
@@ -440,6 +439,7 @@ void canOutput_sendDebugMessage(CanManager* me, TorqueEncoder* tps, BrakePressur
     tps1Percent = 0xFF * tempPedalPercent;
     //tps1Percent = 0xFF * (1 - tempPedalPercent);  //OLD: flipped over pedal percent (this value for display in CAN only)
 
+    
     TorqueEncoder_getPedalTravel(tps, &errorCount, &tempPedalPercent); //getThrottlePercent(TRUE, &errorCount);
     ubyte1 throttlePercent = 0xFF * tempPedalPercent;
 
@@ -649,7 +649,7 @@ void canOutput_sendDebugMessage(CanManager* me, TorqueEncoder* tps, BrakePressur
     canMessages[canMessageCount - 1].data[byteNum++] = (ubyte1)MCM_commands_getTorqueLimit(mcm);
     canMessages[canMessageCount - 1].data[byteNum++] = MCM_commands_getTorqueLimit(mcm) >> 8;
     canMessages[canMessageCount - 1].length = byteNum;
-
+    
     // 520: Torque Encoder
     canMessageCount++;
     byteNum = 0;
@@ -664,7 +664,6 @@ void canOutput_sendDebugMessage(CanManager* me, TorqueEncoder* tps, BrakePressur
     canMessages[canMessageCount - 1].data[byteNum++] = 0;
     canMessages[canMessageCount - 1].data[byteNum++] = 0;
     canMessages[canMessageCount - 1].length = byteNum;
-
     //----------------------------------------------------------------------------
     //Additional sensors
     //----------------------------------------------------------------------------

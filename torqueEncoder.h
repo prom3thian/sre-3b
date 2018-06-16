@@ -46,4 +46,4 @@ void TorqueEncoder_calibrationCycle(TorqueEncoder* me, ubyte1* errorCount);
 //void TorqueEncoder_plausibilityCheck(TorqueEncoder* me, ubyte1* errorCount, bool* isPlausible);
 void TorqueEncoder_getPedalTravel(TorqueEncoder* me, ubyte1* errorCount, float4* pedalPercent);
 
-#endif //  _TORQUEENCODER_H
+#endif //  _TORQUEENCODER_H 

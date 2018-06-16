@@ -18,15 +18,15 @@
 -------------------------------------------------------------------*/
 float4 getPercent(float4 value, float4 start, float4 end, bool zeroToOneOnly)
 {
-	float4 retVal = (value - start) / (end - start);
+    float4 retVal = (value - start) / (end - start);
 
-	if (zeroToOneOnly == TRUE)
-	{
-		if (retVal < 0) { retVal = 0; }
-		if (retVal > 1) { retVal = 1; }
-	}
+    if (zeroToOneOnly == TRUE)
+    {
+        if (retVal < 0) { retVal = 0; }
+        if (retVal > 1) { retVal = 1; }
+    }
 
-	return retVal;
+    return retVal;
 }
 
 // A utility function to get maximum of two integers
@@ -73,8 +73,6 @@ bool blink(ubyte4* clock, ubyte2 highPeriod)
 
     return !( count / highPeriod ) % 2;
 }
-
-
 
 
 
